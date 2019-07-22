@@ -1,89 +1,74 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Forms;
+using System.Data.SQLite;
+using System.Data;
+using System.Collections.Generic;
+using System.IO;
 
 namespace HangManV1
 {
     public partial class HangmanForm : Form
     {
+        
         public HangmanForm()
         {
             InitializeComponent();
         }
+        
         int errorCount = 0;
+        Label coveredWord = new Label();
+        Label word = new Label();
+        Label errors = new Label();
+        Panel btnPanel = new Panel();
+        PictureBox pBox = new PictureBox();
+        string loesungsWort = "beispielsweise";
 
-
-        private void btnStart_Click(object sender, EventArgs e)
-        {
-            GenerateGame();
-        }
+        StringBuilder verdecktesWort = new StringBuilder();
         public void GenerateGame()
         {
-            int hor = 30;
-            int ver = 30;
-            Button[] btnArray = new Button[26];
-            String[] btnChar = new String[26];
-            string loesungsWort = "numerisch";
 
-            StringBuilder verdecktesWort = new StringBuilder(loesungsWort);
+            errors.Text = "Fehler: " + errorCount + "/ 10";
+            errors.Location = new Point(30, 159);
+            errors.Font = new Font("Arial", 10, FontStyle.Bold);
 
-            for (int i = 0; i < verdecktesWort.Length; i++)
-            {
-                verdecktesWort[i] = '_';
-            }
-
-            Label coveredWord = new Label();
             coveredWord.Location = new Point(130, 129);
             coveredWord.Size = new Size(300, 100);
-            coveredWord.Text = string.Join(" ", verdecktesWort);
+            coveredWord.Font = new Font("Arial", 10, FontStyle.Bold);
 
-            Label word = new Label();
-            word.Text = "Gesucht wird: ";
+            word.Text = "Gesucht: ";
             word.Location = new Point(30, 129);
+            word.Font = new Font("Arial", 12, FontStyle.Bold);
 
-            Panel btnPanel = new Panel();
-            btnPanel.Location = new Point(0, 330);
+            btnPanel.Location = new Point(0, 200);
             btnPanel.Size = new Size(500, 400);
 
-            PictureBox pBox = new PictureBox();
-            pBox.Location = new Point(550, 100);
-            pBox.Image = Image.FromFile("C:/Users/Dennis/source/repos/Test/Test/Resources/" + errorCount + ".png");
-            pBox.Size = new Size(400, 400);
+            pBox.Image = Image.FromFile(@"../../Resources/0.png");
 
-            Controls.Add(pBox);
-            Controls.Add(word);
-            Controls.Add(btnPanel);
-            Controls.Add(coveredWord);
 
-            #region 25 characters
-            for (int i = 0, c = 97; i < btnChar.Length; i++)
+            Button[] btnArray = new Button[26];
+            String[] btnChar = new String[26];
+
+            for (int i = 0, x = 0, y = 0; i < 26; i++, x++)
             {
-                char ascii = (char)c;
-                btnChar[i] = ascii.ToString();
-                c++;
-            }
-            #endregion
-            #region 26Buttonsa-z
-            for (int i = 0; i < btnArray.Length; i++)
-            {
+                if (i % 10 == 0)
+                {
+                    y++;
+                    x = 0;
+                }
+
                 btnArray[i] = new Button();
-                btnArray[i].Size = new Size(30, 30);
-                btnArray[i].Location = new Point(hor, ver);
-                btnArray[i].Click += new EventHandler(buttonClick);
-                if ((i + 1) % 13 != 0) { hor += 30; }
-                else { hor = 30; ver += 30; }
-                btnArray[i].Text = btnChar[i];
-                btnArray[i].Name = btnChar[i];
+                btnArray[i].Visible = true;
+                btnArray[i].Location = new System.Drawing.Point(16 + x * 30, 80 + y * 27);
+                btnArray[i].Size = new System.Drawing.Size(27, 27);
+                btnArray[i].TabIndex = i + 4;
+                btnArray[i].Text = ((char)(i + 97)).ToString();
+                btnArray[i].Name = "Button" + btnArray[i].Text;
+                btnArray[i].UseVisualStyleBackColor = true;
+                btnArray[i].Click += new System.EventHandler(buttonClick);
                 btnPanel.Controls.Add(btnArray[i]);
             }
-            #endregion 26Buttonsa-z
             //Click-Event for each Button
             void buttonClick(object sender, EventArgs e)
             {
@@ -92,28 +77,63 @@ namespace HangManV1
                 if (charIndex != -1)
                 {
                     verdecktesWort[charIndex] = button.Text[0];
-                    //button.Visible = !button.Visible;
+                    coveredWord.Text = string.Join(" ", verdecktesWort);
+
+                    if (verdecktesWort.ToString() == loesungsWort)
+                    {
+                        DialogResult result = MessageBox.Show("Du hast diese Runde gewonnen!\n Möchtest du eine neue Runde starten?", 
+                            "Der Kopf bleibt dran!", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                        if (result == DialogResult.Yes)
+                        {
+                            errorCount = 0;
+                            GenerateGame();
+                        }
+                        else
+                        {
+                            Close();
+                        }
+                    }
                 }
                 else
                 {
                     MessageBox.Show("Buchstabe nicht vorhanden");
                     errorCount++;
-
-                    pBox.Load("C:/Users/Dennis/source/repos/Test/Test/Resources/" + errorCount + ".png");
-                    pBox.Refresh();
-                    return;
+                    checkErrors(errorCount);
+                    
                 }
-
-
-                coveredWord.Text = string.Join(" ", verdecktesWort);
+                
             }
-
-
+            Controls.Add(pBox);
+            Controls.Add(word);
+            Controls.Add(btnPanel);
+            Controls.Add(coveredWord);
+            Controls.Add(errors);
         }
-
-        private void Hangman_Load(object sender, EventArgs e)
+        public void checkErrors(int errorCounter)
         {
+            errors.Text = "Fehler: " + errorCounter + "/ 10";
+            if (errorCounter < 10)
+            {
+                pBox.Load(@"../../Resources/" + errorCounter + ".png");
+                pBox.Refresh();
+                errors.Text = "Fehler: " + errorCounter + "/ 10";
+            }
+            else
+            {
+                DialogResult result = MessageBox.Show("Du hast diese Runde verloren!\n Möchtest du eine neue Runde starten?", 
+                    "Der Kopf ist ab!", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
+                if (result == DialogResult.Yes)
+                {
+                    errorCount = 0;
+                    GenerateGame();
+                }
+                else
+                {
+                    Close();
+                }
+            }
         }
     }
 }
