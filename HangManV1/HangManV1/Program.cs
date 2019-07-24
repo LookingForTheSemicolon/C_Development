@@ -18,18 +18,6 @@ namespace HangManV1
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new LoginForm());
-
-            do
-            {
-                if (LoginForm.UserSuccessfullyAuthenticated)
-                {
-                    Application.Run(new HangManFormV1());
-                }
-                if (!LoginForm.UserSuccessfullyAuthenticated)
-                {
-                    Application.Run(new LoginForm());
-                }
-            } while ((HangManFormV1.gameRunning));
         }
     }
 }

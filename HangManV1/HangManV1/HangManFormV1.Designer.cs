@@ -32,6 +32,7 @@
             this.tSGame = new System.Windows.Forms.ToolStripMenuItem();
             this.tSNewGame = new System.Windows.Forms.ToolStripMenuItem();
             this.tSNewUser = new System.Windows.Forms.ToolStripMenuItem();
+            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tSHighscore = new System.Windows.Forms.ToolStripMenuItem();
             this.tSHighscoreList = new System.Windows.Forms.ToolStripMenuItem();
             this.tSNewHsDB = new System.Windows.Forms.ToolStripMenuItem();
@@ -41,7 +42,6 @@
             this.panelForButtons = new System.Windows.Forms.Panel();
             this.lblCoveredWord = new System.Windows.Forms.Label();
             this.lblErrorCount = new System.Windows.Forms.Label();
-            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbErrorImages)).BeginInit();
             this.SuspendLayout();
@@ -70,16 +70,23 @@
             // tSNewGame
             // 
             this.tSNewGame.Name = "tSNewGame";
-            this.tSNewGame.Size = new System.Drawing.Size(180, 22);
+            this.tSNewGame.Size = new System.Drawing.Size(132, 22);
             this.tSNewGame.Text = "New Game";
             this.tSNewGame.Click += new System.EventHandler(this.tSNewGame_Click);
             // 
             // tSNewUser
             // 
             this.tSNewUser.Name = "tSNewUser";
-            this.tSNewUser.Size = new System.Drawing.Size(180, 22);
+            this.tSNewUser.Size = new System.Drawing.Size(132, 22);
             this.tSNewUser.Text = "New User";
             this.tSNewUser.Click += new System.EventHandler(this.tSNewUser_Click);
+            // 
+            // exitToolStripMenuItem
+            // 
+            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
+            this.exitToolStripMenuItem.Text = "Exit";
+            this.exitToolStripMenuItem.Click += new System.EventHandler(this.ExitToolStripMenuItem_Click);
             // 
             // tSHighscore
             // 
@@ -147,9 +154,9 @@
             this.lblCoveredWord.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblCoveredWord.Location = new System.Drawing.Point(95, 39);
             this.lblCoveredWord.Name = "lblCoveredWord";
-            this.lblCoveredWord.Size = new System.Drawing.Size(25, 16);
+            this.lblCoveredWord.Size = new System.Drawing.Size(214, 16);
             this.lblCoveredWord.TabIndex = 8;
-            this.lblCoveredWord.Text = "_ _";
+            this.lblCoveredWord.Text = "Please select Game -> New Game";
             // 
             // lblErrorCount
             // 
@@ -160,13 +167,6 @@
             this.lblErrorCount.Size = new System.Drawing.Size(77, 16);
             this.lblErrorCount.TabIndex = 9;
             this.lblErrorCount.Text = "Error Count:";
-            // 
-            // exitToolStripMenuItem
-            // 
-            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.exitToolStripMenuItem.Text = "Exit";
-            this.exitToolStripMenuItem.Click += new System.EventHandler(this.ExitToolStripMenuItem_Click);
             // 
             // HangManFormV1
             // 

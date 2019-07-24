@@ -15,7 +15,6 @@ namespace HangManV1
         private SQLiteCommand liteCommand = new SQLiteCommand();
         private const string pfad = @"../../Resources/wortliste.txt";
         private int errorCount;
-        public static bool gameRunning = false;
         public string userNameLabel = LoginForm.userName;
         private string randWord;
         private string randWordCovered;
@@ -24,10 +23,7 @@ namespace HangManV1
         {
             InitializeComponent();
             lblCurrentLogin.Text = "Current Login: " + userNameLabel;
-            NewGame();
-            gameRunning = true;
             generateButtonsForPanel();
-            this.Controls.Add(panelForButtons);
         }
         public void NewGame()
         {
@@ -57,6 +53,8 @@ namespace HangManV1
                 ButtonListForPanel[i].Click += new System.EventHandler(this.button_Click);
                 panelForButtons.Controls.Add(ButtonListForPanel[i]);
             }
+
+            this.Controls.Add(panelForButtons);
 
         }
         
@@ -94,7 +92,6 @@ namespace HangManV1
                         }
                         else
                         {
-                            gameRunning = false;
                             Close();
                         }
                     }
@@ -117,7 +114,6 @@ namespace HangManV1
                         }
                         else
                         {
-                            gameRunning = false;
                             Close();
                         }
                     }
@@ -249,18 +245,14 @@ namespace HangManV1
         }
         private void tSNewUser_Click(object sender, EventArgs e)
         {
-            LoginForm.UserSuccessfullyAuthenticated = false;
-            Close();
+            this.Hide();
+            LoginForm lForm = new LoginForm();
+            lForm.ShowDialog();
+            this.Close();
         }
-
         private void ExitToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            gameRunning = false;
             Close();
-        }
-        private void HangManFormV1_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            gameRunning = false;
         }
     }
 }

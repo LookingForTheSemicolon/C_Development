@@ -6,6 +6,8 @@ namespace HangManV1
 {
     public partial class LoginForm : Form
     {
+        CryptPassword crypPassword = new CryptPassword();
+        private SqlCommands SqlCommand = new SqlCommands();
         private static string _userName;
         public static string userName
         {
@@ -24,6 +26,7 @@ namespace HangManV1
         public LoginForm()
         {
             InitializeComponent();
+            SqlCommand.newDataBase();
             fillCombobox();
         }
 
@@ -31,7 +34,7 @@ namespace HangManV1
         {
             using (SQLiteConnection connection = new SQLiteConnection("Data Source=" + SqlCommands.dataSource))
             {
-                SQLiteCommand command = new SQLiteCommand("Select * FROM User WHERE name = '" + comboBoxUsers.Text + "' AND password ='" + txtBoxPassword.Text + "' ", connection);
+                SQLiteCommand command = new SQLiteCommand("Select * FROM User WHERE name = '" + comboBoxUsers.Text + "' AND password ='" + crypPassword.cryptPassword(txtBoxPassword.Text) + "' ", connection);
                 
                 try
                 {
@@ -45,8 +48,10 @@ namespace HangManV1
                     if (count == 1)
                     {
                         userName = getUser();
-                        UserSuccessfullyAuthenticated = true;
-                        Close();
+                        this.Hide();
+                        HangManFormV1 hman = new HangManFormV1();
+                        hman.ShowDialog();
+                        this.Close();
                     }
                     else
                     {
@@ -84,13 +89,14 @@ namespace HangManV1
         {
             using (SQLiteConnection connection = new SQLiteConnection("Data Source=" + SqlCommands.dataSource))
             {
-                SQLiteCommand command = new SQLiteCommand("INSERT INTO User (id, name, password, win, lose) VALUES (NULL, '" + comboBoxUsers.Text + "', '" + txtBoxPassword.Text + "', 0, 0)",
+                SQLiteCommand command = new SQLiteCommand("INSERT INTO User (id, name, password, win, lose) VALUES (NULL, '" + comboBoxUsers.Text + "', '" + crypPassword.cryptPassword(txtBoxPassword.Text) + "', 0, 0)",
                     connection);
 
                 connection.Open();
                 command.ExecuteNonQuery();
                 command.Dispose();
             }
+            MessageBox.Show(comboBoxUsers.Text+ " added to the DataBase");
             comboBoxUsers.Items.Add(comboBoxUsers.Text);
         }
     }
